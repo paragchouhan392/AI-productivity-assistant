@@ -2,10 +2,12 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 import { testConnection } from "./src/config/db.js";
 import healthRoutes from "./src/routes/health.routes.js";
+import authRoutes from "./src/routes/auth.routes.js";
 
 dotenv.config();
 
@@ -16,10 +18,12 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 // Routes
 app.use("/api/health", healthRoutes);
+app.use("/api/auth", authRoutes);
 
 // 404 handler
 app.use((req, res) => {
