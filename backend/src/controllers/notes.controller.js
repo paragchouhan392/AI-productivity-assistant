@@ -4,7 +4,7 @@ import {
   getNoteById,
   updateNote,
   deleteNote,
-} from "../models/note.model.js";
+} from "../models/notes.model.js";
 
 export const addNote = async (req, res, next) => {
   try {
