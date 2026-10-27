@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { testConnection } from "./src/config/db.js";
 import healthRoutes from "./src/routes/health.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
+import notesRoutes from "./src/routes/notes.routes.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/notes", notesRoutes);
 
 // 404 handler
 app.use((req, res) => {
