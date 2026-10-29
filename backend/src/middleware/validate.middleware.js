@@ -1,4 +1,5 @@
 import { body,  param, query as queryParam, validationResult } from "express-validator";
+import { TASK_STATUSES } from "../constants/taskStatus.js";
 
 export const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -87,5 +88,85 @@ export const updateNoteRules = [
 export const listNotesRules = [
   queryParam("page").optional().isInt({ min: 1 }).withMessage("page must be 1 or more").toInt(),
   queryParam("limit").optional().isInt({ min: 1, max: 100 }).withMessage("limit must be 1-100").toInt(),
+  queryParam("search").optional().isString().trim().isLength({ max: 100 }),
+];
+
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
+
+export const taskIdRule = [
+  param("id")
+    .isInt({ min: 1, max: 2147483647 })
+    .withMessage("Invalid task id")
+    .toInt(),
+];
+
+export const createTaskRules = [
+  body("task_title")
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title is required (max 200 characters)"),
+  body("task_description")
+    .optional({ values: "null" })
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 5000 })
+    .withMessage("Description can be at most 5000 characters"),
+  body("deadline")
+    .optional({ values: "null" })
+    .matches(DATE_ONLY)
+    .withMessage("Deadline must be in YYYY-MM-DD format")
+    .isISO8601({ strict: true })
+    .withMessage("Deadline is not a valid date"),
+];
+
+export const updateTaskRules = [
+  body("task_title")
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title must be 1-200 characters"),
+  body("task_description")
+    .optional()
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 5000 })
+    .withMessage("Description can be at most 5000 characters"),
+  body("deadline")
+    .optional({ values: "null" })
+    .matches(DATE_ONLY)
+    .withMessage("Deadline must be in YYYY-MM-DD format, or null to remove it")
+    .isISO8601({ strict: true })
+    .withMessage("Deadline is not a valid date"),
+  body("status")
+    .optional()
+    .isIn(TASK_STATUSES)
+    .withMessage(`Status must be one of: ${TASK_STATUSES.join(", ")}`),
+  body().custom((value, { req }) => {
+    const allowed = ["task_title", "task_description", "deadline", "status"];
+    if (!allowed.some((key) => req.body[key] !== undefined)) {
+      throw new Error("Provide at least one field to update");
+    }
+    return true;
+  }),
+];
+
+export const taskStatusRules = [
+  body("status")
+    .isIn(TASK_STATUSES)
+    .withMessage(`Status must be one of: ${TASK_STATUSES.join(", ")}`),
+];
+
+export const listTasksRules = [
+  queryParam("page").optional().isInt({ min: 1 }).withMessage("page must be 1 or more").toInt(),
+  queryParam("limit").optional().isInt({ min: 1, max: 100 }).withMessage("limit must be 1-100").toInt(),
+  queryParam("status").optional().isIn(TASK_STATUSES).withMessage("Invalid status"),
+  queryParam("due")
+    .optional()
+    .isIn(["overdue", "today", "upcoming", "none"])
+    .withMessage("due must be overdue, today, upcoming or none"),
+  queryParam("sort")
+    .optional()
+    .isIn(["deadline", "newest", "oldest"])
+    .withMessage("sort must be deadline, newest or oldest"),
   queryParam("search").optional().isString().trim().isLength({ max: 100 }),
 ];

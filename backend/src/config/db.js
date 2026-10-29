@@ -5,6 +5,8 @@ dotenv.config();
 
 const { Pool } = pg;
 
+pg.types.setTypeParser(1082, (value) => value); // keep DATE columns as "YYYY-MM-DD"
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, // required for Neon
