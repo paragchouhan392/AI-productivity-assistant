@@ -10,6 +10,7 @@ import healthRoutes from "./src/routes/health.routes.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import notesRoutes from "./src/routes/notes.routes.js";
 import tasksRoutes from "./src/routes/tasks.routes.js";
+import plannerRoutes from "./src/routes/planner.routes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/notes", notesRoutes);
 app.use("/api/tasks", tasksRoutes);
+app.use("/api/planner", plannerRoutes);
 
 // 404 handler
 app.use((req, res) => {
