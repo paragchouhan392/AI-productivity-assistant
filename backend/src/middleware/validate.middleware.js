@@ -1,5 +1,7 @@
 import { body,  param, query as queryParam, validationResult } from "express-validator";
 import { TASK_STATUSES } from "../constants/taskStatus.js";
+import { TODO_STATUSES } from "../constants/todoStatus.js";
+import { timeToMinutes } from "../utils/time.js";
 
 export const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -169,4 +171,129 @@ export const listTasksRules = [
     .isIn(["deadline", "newest", "oldest"])
     .withMessage("sort must be deadline, newest or oldest"),
   queryParam("search").optional().isString().trim().isLength({ max: 100 }),
+];
+
+const TIME_RE = /^([01]?\d|2[0-3]):[0-5]\d$/;
+const TIME_MSG = "Time must be in HH:MM format (e.g. 01:30), max 23:59";
+
+const positiveTime = (value) => {
+  if (timeToMinutes(value) <= 0) {
+    throw new Error("Time must be greater than 00:00");
+  }
+  return true;
+};
+
+export const todoIdRule = [
+  param("id")
+    .isInt({ min: 1, max: 2147483647 })
+    .withMessage("Invalid task id")
+    .toInt(),
+];
+
+export const createPlannedRules = [
+  body("todo_title")
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title is required (max 200 characters)"),
+  body("todo_description")
+    .optional({ values: "null" })
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 2000 })
+    .withMessage("Description can be at most 2000 characters"),
+  body("todo_date")
+    .optional({ values: "null" })
+    .matches(DATE_ONLY)
+    .withMessage("Date must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("Date is not valid"),
+  body("alloted_time")
+    .matches(TIME_RE)
+    .withMessage(`alloted_time is required. ${TIME_MSG}`)
+    .bail()
+    .custom(positiveTime),
+];
+
+export const createExtraRules = [
+  body("todo_title")
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title is required (max 200 characters)"),
+  body("todo_description")
+    .optional({ values: "null" })
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 2000 })
+    .withMessage("Description can be at most 2000 characters"),
+  body("actual_time")
+    .matches(TIME_RE)
+    .withMessage(`actual_time is required. ${TIME_MSG}`)
+    .bail()
+    .custom(positiveTime),
+  body("alloted_time")
+    .optional({ values: "null" })
+    .matches(TIME_RE)
+    .withMessage(TIME_MSG)
+    .bail()
+    .custom(positiveTime),
+];
+
+export const updateTodoRules = [
+  body("todo_title")
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title must be 1-200 characters"),
+  body("todo_description")
+    .optional()
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 2000 })
+    .withMessage("Description can be at most 2000 characters"),
+  body("alloted_time")
+    .optional({ values: "null" })
+    .matches(TIME_RE)
+    .withMessage(TIME_MSG)
+    .bail()
+    .custom(positiveTime),
+  body("actual_time").optional().matches(TIME_RE).withMessage(TIME_MSG),
+  body("status")
+    .optional()
+    .isIn(TODO_STATUSES)
+    .withMessage(`Status must be one of: ${TODO_STATUSES.join(", ")}`),
+  body().custom((value, { req }) => {
+    const allowed = ["todo_title", "todo_description", "alloted_time", "actual_time", "status"];
+    if (!allowed.some((key) => req.body[key] !== undefined)) {
+      throw new Error("Provide at least one field to update");
+    }
+    return true;
+  }),
+];
+
+export const listTodoRules = [
+  queryParam("date")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("date must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("date is not valid"),
+];
+
+export const historyRules = [
+  queryParam("from")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("from must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("from is not valid"),
+  queryParam("to")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("to must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("to is not valid"),
 ];

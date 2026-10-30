@@ -1,0 +1,1 @@
+export const TODO_STATUSES = ["pending", "in_progress", "completed"];
