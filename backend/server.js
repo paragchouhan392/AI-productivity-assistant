@@ -11,6 +11,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import notesRoutes from "./src/routes/notes.routes.js";
 import tasksRoutes from "./src/routes/tasks.routes.js";
 import plannerRoutes from "./src/routes/planner.routes.js";
+import eventsRoutes from "./src/routes/events.routes.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/notes", notesRoutes);
 app.use("/api/tasks", tasksRoutes);
 app.use("/api/planner", plannerRoutes);
+app.use("/api/events", eventsRoutes); 
 
 // 404 handler
 app.use((req, res) => {

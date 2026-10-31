@@ -2,6 +2,7 @@ import { body,  param, query as queryParam, validationResult } from "express-val
 import { TASK_STATUSES } from "../constants/taskStatus.js";
 import { TODO_STATUSES } from "../constants/todoStatus.js";
 import { timeToMinutes } from "../utils/time.js";
+import { EVENT_TYPES } from "../constants/eventTypes.js";
 
 export const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -296,4 +297,109 @@ export const historyRules = [
     .bail()
     .isISO8601({ strict: true })
     .withMessage("to is not valid"),
+];
+
+const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+export const eventIdRule = [
+  param("id")
+    .isInt({ min: 1, max: 2147483647 })
+    .withMessage("Invalid event id")
+    .toInt(),
+];
+
+export const createEventRules = [
+  body("event_title")
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title is required (max 200 characters)"),
+  body("event_description")
+    .optional({ values: "null" })
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 2000 })
+    .withMessage("Description can be at most 2000 characters"),
+  body("event_date")
+    .matches(DATE_ONLY)
+    .withMessage("event_date is required in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("event_date is not a valid date"),
+  body("event_time")
+    .optional({ values: "null" })
+    .matches(TIME_RE)
+    .withMessage(TIME_MSG),
+  body("event_type")
+    .optional()
+    .isIn(EVENT_TYPES)
+    .withMessage(`event_type must be one of: ${EVENT_TYPES.join(", ")}`),
+];
+
+export const updateEventRules = [
+  body("event_title")
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 200 })
+    .withMessage("Title must be 1-200 characters"),
+  body("event_description")
+    .optional()
+    .isString()
+    .withMessage("Description must be text")
+    .isLength({ max: 2000 })
+    .withMessage("Description can be at most 2000 characters"),
+  body("event_date")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("event_date must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("event_date is not a valid date"),
+  body("event_time")
+    .optional({ values: "null" })
+    .matches(TIME_RE)
+    .withMessage(`${TIME_MSG}, or null to make it an all-day event`),
+  body("event_type")
+    .optional()
+    .isIn(EVENT_TYPES)
+    .withMessage(`event_type must be one of: ${EVENT_TYPES.join(", ")}`),
+  body().custom((value, { req }) => {
+    const allowed = ["event_title", "event_description", "event_date", "event_time", "event_type"];
+    if (!allowed.some((key) => req.body[key] !== undefined)) {
+      throw new Error("Provide at least one field to update");
+    }
+    return true;
+  }),
+];
+
+export const listEventsRules = [
+  queryParam("month")
+    .optional()
+    .matches(MONTH_RE)
+    .withMessage("month must be in YYYY-MM format"),
+  queryParam("from")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("from must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("from is not a valid date"),
+  queryParam("to")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("to must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("to is not a valid date"),
+  queryParam("type")
+    .optional()
+    .isIn(EVENT_TYPES)
+    .withMessage(`type must be one of: ${EVENT_TYPES.join(", ")}`),
+];
+
+export const upcomingEventsRules = [
+  queryParam("days")
+    .optional()
+    .isInt({ min: 1, max: 30 })
+    .withMessage("days must be between 1 and 30")
+    .toInt(),
 ];
