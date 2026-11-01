@@ -16,3 +16,10 @@ export const daysBetween = (fromStr, toStr) => {
   };
   return Math.round((toUtc(toStr) - toUtc(fromStr)) / 86400000);
 };
+
+// ["2026-11-01", "2026-11-02", ...] from `from` to `to`, inclusive
+export const eachDate = (from, to) => {
+  const dates = [];
+  for (let d = from; d <= to; d = addDays(d, 1)) dates.push(d);
+  return dates;
+};
