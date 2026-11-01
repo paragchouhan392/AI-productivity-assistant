@@ -8,6 +8,13 @@ import {
 } from "../models/planner.model.js";
 import { getToday, addDays, daysBetween } from "../utils/date.js";
 import { timeToMinutes, minutesToTime, formatTodo } from "../utils/time.js";
+import { refreshDailyStats } from "../models/stats.model.js";
+
+// A stats failure must never fail the user's actual request
+const syncStats = (userId, date) =>
+  refreshDailyStats({ userId, date }).catch((err) =>
+    console.error("Failed to refresh daily statistics:", err.message)
+  );
 
 const sum = (items, key) => items.reduce((total, item) => total + (item[key] ?? 0), 0);
 
@@ -62,6 +69,7 @@ export const addPlannedTodo = async (req, res, next) => {
       status: "pending",
       isExtra: false,
     });
+    await syncStats(req.user.id, date);
 
     res.status(201).json({ message: "Task added to planner", todo: formatTodo(todo) });
   } catch (err) {
@@ -73,17 +81,20 @@ export const addPlannedTodo = async (req, res, next) => {
 export const addExtraTodo = async (req, res, next) => {
   try {
     const { todo_title, todo_description, actual_time, alloted_time } = req.body;
+    const today = getToday();
 
     const todo = await createTodo({
       userId: req.user.id,
       title: todo_title,
       description: todo_description ?? "",
-      date: getToday(),
+      date: today,
       allotedMinutes: alloted_time ? timeToMinutes(alloted_time) : null,
       actualMinutes: timeToMinutes(actual_time),
       status: "completed",
       isExtra: true,
     });
+
+    await syncStats(req.user.id, today);
 
     res.status(201).json({ message: "Extra task added", todo: formatTodo(todo) });
   } catch (err) {
@@ -178,6 +189,8 @@ export const editTodo = async (req, res, next) => {
       },
     });
 
+    await syncStats(req.user.id, existing.todo_date);
+
     res.json({ message: "Task updated", todo: formatTodo(todo) });
   } catch (err) {
     next(err);
@@ -196,6 +209,8 @@ export const removeTodo = async (req, res, next) => {
     }
 
     await deleteTodo({ todoId: req.params.id, userId: req.user.id });
+
+    await syncStats(req.user.id, existing.todo_date);
     res.json({ message: "Task deleted" });
   } catch (err) {
     next(err);
