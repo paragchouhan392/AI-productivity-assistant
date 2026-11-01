@@ -403,3 +403,28 @@ export const upcomingEventsRules = [
     .withMessage("days must be between 1 and 30")
     .toInt(),
 ];
+
+export const heatmapRules = [
+  queryParam("from")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("from must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("from is not a valid date"),
+  queryParam("to")
+    .optional()
+    .matches(DATE_ONLY)
+    .withMessage("to must be in YYYY-MM-DD format")
+    .bail()
+    .isISO8601({ strict: true })
+    .withMessage("to is not a valid date"),
+];
+
+export const trendsRules = [
+  queryParam("range")
+    .optional()
+    .isIn(["7", "30", "90"])
+    .withMessage("range must be 7, 30 or 90")
+    .toInt(),
+];
