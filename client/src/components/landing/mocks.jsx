@@ -1,14 +1,16 @@
 import MockHeatmap from "./MockHeatmap";
 
 const card =
-  "rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl shadow-brand-600/10";
+  "rounded-2xl border border-white/10 bg-surface p-5 shadow-[0_30px_80px_-20px_rgba(99,102,241,0.35)]";
+const row =
+  "flex items-center justify-between gap-3 rounded-xl border border-line bg-surface-2 px-3 py-2.5";
 
 const tones = {
-  green: "bg-emerald-50 text-emerald-700",
-  blue: "bg-sky-50 text-sky-700",
-  slate: "bg-slate-100 text-slate-600",
-  violet: "bg-violet-50 text-violet-700",
-  amber: "bg-amber-50 text-amber-700",
+  green: "bg-emerald-500/15 text-emerald-300",
+  blue: "bg-sky-500/15 text-sky-300",
+  slate: "bg-white/10 text-fg-muted",
+  violet: "bg-violet-500/15 text-violet-300",
+  amber: "bg-amber-500/15 text-amber-300",
 };
 
 function Pill({ tone = "slate", children }) {
@@ -51,44 +53,41 @@ export function PlannerMock() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold">Today's plan</p>
-          <p className="text-xs text-slate-500">Planned tasks</p>
+          <p className="text-xs text-fg-subtle">Planned tasks</p>
         </div>
         <Pill tone="violet">3 planned</Pill>
       </div>
 
       <ul className="space-y-2">
-        {rows.map((row) => (
-          <li
-            key={row.title}
-            className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2.5"
-          >
+        {rows.map((r) => (
+          <li key={r.title} className={row}>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{row.title}</p>
-              <p className="text-xs text-slate-500">
-                Planned {row.planned} · Actual {row.actual}
+              <p className="truncate text-sm font-medium">{r.title}</p>
+              <p className="text-xs text-fg-subtle">
+                Planned {r.planned} · Actual {r.actual}
               </p>
             </div>
-            <Pill tone={row.tone}>{row.status}</Pill>
+            <Pill tone={r.tone}>{r.status}</Pill>
           </li>
         ))}
       </ul>
 
-      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-dashed border-violet-200 bg-violet-50/50 px-3 py-2.5">
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-dashed border-violet-400/30 bg-violet-500/10 px-3 py-2.5">
         <div className="min-w-0">
           <p className="truncate text-sm font-medium">Helped a friend debug</p>
-          <p className="text-xs text-slate-500">Unplanned · Actual 00:40</p>
+          <p className="text-xs text-fg-subtle">Unplanned · Actual 00:40</p>
         </div>
         <Pill tone="violet">Extra</Pill>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-center">
+      <div className="mt-4 grid grid-cols-2 gap-3 border-t border-line pt-4 text-center">
         <div>
           <p className="text-lg font-semibold">04:30</p>
-          <p className="text-xs text-slate-500">Planned time</p>
+          <p className="text-xs text-fg-subtle">Planned time</p>
         </div>
         <div>
-          <p className="text-lg font-semibold text-brand-600">03:35</p>
-          <p className="text-xs text-slate-500">Productive time</p>
+          <p className="text-lg font-semibold text-brand-300">03:35</p>
+          <p className="text-xs text-fg-subtle">Productive time</p>
         </div>
       </div>
     </div>
@@ -123,13 +122,10 @@ export function TasksNotesMock() {
         <p className="mb-3 text-sm font-semibold">Upcoming tasks</p>
         <ul className="space-y-2">
           {tasks.map((task) => (
-            <li
-              key={task.title}
-              className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-3 py-2.5"
-            >
+            <li key={task.title} className={row}>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{task.title}</p>
-                <p className="text-xs text-slate-500">{task.due}</p>
+                <p className="text-xs text-fg-subtle">{task.due}</p>
               </div>
               <Pill tone={task.tone}>{task.status}</Pill>
             </li>
@@ -141,14 +137,14 @@ export function TasksNotesMock() {
         {["Project ideas", "DBMS notes"].map((title, i) => (
           <div
             key={title}
-            className="rounded-2xl border border-amber-100 bg-amber-50/70 p-4 shadow-lg shadow-amber-500/10"
+            className="rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 shadow-lg shadow-amber-500/5"
           >
             <p className="text-sm font-semibold">{title}</p>
             <div className="mt-3 space-y-2" aria-hidden>
-              <div className="h-2 rounded bg-amber-200/70" />
-              <div className="h-2 w-5/6 rounded bg-amber-200/70" />
+              <div className="h-2 rounded bg-amber-300/25" />
+              <div className="h-2 w-5/6 rounded bg-amber-300/25" />
               <div
-                className={`h-2 rounded bg-amber-200/70 ${i === 0 ? "w-2/3" : "w-3/4"}`}
+                className={`h-2 rounded bg-amber-300/25 ${i === 0 ? "w-2/3" : "w-3/4"}`}
               />
             </div>
           </div>
@@ -177,17 +173,17 @@ export function CalendarMock() {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
   const dots = {
-    5: "bg-brand-500",
-    12: "bg-emerald-500",
-    18: "bg-amber-500",
-    25: "bg-rose-500",
+    5: "bg-brand-400",
+    12: "bg-emerald-400",
+    18: "bg-amber-400",
+    25: "bg-rose-400",
   };
 
   return (
     <div className={card}>
       <p className="mb-4 text-sm font-semibold">{monthLabel}</p>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-slate-400">
+      <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-fg-subtle">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
           <span key={i}>{d}</span>
         ))}
@@ -203,7 +199,7 @@ export function CalendarMock() {
               className={`flex aspect-square flex-col items-center justify-center rounded-lg text-xs ${
                 day === today
                   ? "bg-brand-600 font-semibold text-white"
-                  : "text-slate-700"
+                  : "text-fg-muted"
               }`}
             >
               {day}
@@ -219,18 +215,18 @@ export function CalendarMock() {
         )}
       </div>
 
-      <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
-        <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+      <div className="mt-4 space-y-2 border-t border-line pt-4">
+        <div className="flex items-center justify-between rounded-xl bg-surface-2 px-3 py-2">
           <div>
             <p className="text-sm font-medium">Project review</p>
-            <p className="text-xs text-slate-500">15:30</p>
+            <p className="text-xs text-fg-subtle">15:30</p>
           </div>
           <Pill tone="blue">Meeting</Pill>
         </div>
-        <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2">
+        <div className="flex items-center justify-between rounded-xl bg-surface-2 px-3 py-2">
           <div>
             <p className="text-sm font-medium">Submit report</p>
-            <p className="text-xs text-slate-500">All day</p>
+            <p className="text-xs text-fg-subtle">All day</p>
           </div>
           <Pill tone="amber">Reminder</Pill>
         </div>
@@ -259,28 +255,28 @@ export function DashboardMock() {
     <div className={card}>
       <div className="grid grid-cols-3 gap-3">
         {tiles.map((tile) => (
-          <div key={tile.label} className="rounded-xl bg-slate-50 p-3">
+          <div key={tile.label} className="rounded-xl bg-surface-2 p-3">
             <p className="text-lg font-semibold">{tile.value}</p>
-            <p className="text-[11px] text-slate-500">{tile.label}</p>
+            <p className="text-[11px] text-fg-subtle">{tile.label}</p>
           </div>
         ))}
       </div>
 
-      <p className="mb-2 mt-5 text-xs font-medium text-slate-500">
+      <p className="mb-2 mt-5 text-xs font-medium text-fg-subtle">
         Activity heatmap
       </p>
       <div className="overflow-hidden">
         <MockHeatmap weeks={22} cell="size-2.5" />
       </div>
 
-      <p className="mb-2 mt-5 text-xs font-medium text-slate-500">
+      <p className="mb-2 mt-5 text-xs font-medium text-fg-subtle">
         Planned vs actual time, last 7 days
       </p>
       <div className="flex h-24 items-end gap-3" aria-hidden>
         {bars.map(([planned, actual], i) => (
           <div key={i} className="flex h-full flex-1 items-end gap-1">
             <div
-              className="flex-1 rounded-t bg-slate-200"
+              className="flex-1 rounded-t bg-white/15"
               style={{ height: `${planned}%` }}
             />
             <div
@@ -290,9 +286,9 @@ export function DashboardMock() {
           </div>
         ))}
       </div>
-      <div className="mt-3 flex gap-4 text-[11px] text-slate-500">
+      <div className="mt-3 flex gap-4 text-[11px] text-fg-subtle">
         <span className="flex items-center gap-1.5">
-          <span className="size-2 rounded-sm bg-slate-200" /> Planned
+          <span className="size-2 rounded-sm bg-white/15" /> Planned
         </span>
         <span className="flex items-center gap-1.5">
           <span className="size-2 rounded-sm bg-brand-500" /> Actual

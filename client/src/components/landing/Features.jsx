@@ -63,10 +63,10 @@ export default function Features() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map(({ icon: Icon, title, text, color, soon }, i) => (
             <Reveal key={title} delay={(i % 3) * 0.08} className="h-full">
-              <TiltCard className="h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-xl">
+              <TiltCard className="h-full rounded-2xl border border-white/10 bg-surface p-6 transition-all hover:border-brand-500/40 hover:shadow-[0_20px_60px_-15px_rgba(99,102,241,0.4)]">
                 <div
                   style={{ transform: "translateZ(40px)" }}
-                  className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-linear-to-br ${color} text-white shadow-lg`}
+                  className={`mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-linear-to-br ${color} text-white shadow-lg shadow-black/40`}
                 >
                   <Icon size={22} />
                 </div>
@@ -76,14 +76,14 @@ export default function Features() {
                 >
                   {title}
                   {soon && (
-                    <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-medium text-violet-700">
+                    <span className="rounded-full bg-violet-500/15 px-2 py-0.5 text-[11px] font-medium text-violet-300">
                       Coming soon
                     </span>
                   )}
                 </h3>
                 <p
                   style={{ transform: "translateZ(12px)" }}
-                  className="mt-2 text-sm leading-relaxed text-slate-600"
+                  className="mt-2 text-sm leading-relaxed text-fg-muted"
                 >
                   {text}
                 </p>

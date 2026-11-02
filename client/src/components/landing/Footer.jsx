@@ -3,9 +3,9 @@ import { Sparkles } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-slate-500 sm:flex-row">
-        <div className="flex items-center gap-2 font-semibold text-slate-700">
+    <footer className="border-t border-white/10 bg-surface/50">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-fg-subtle sm:flex-row">
+        <div className="flex items-center gap-2 font-semibold text-fg">
           <span className="grid size-7 place-items-center rounded-lg bg-linear-to-br from-brand-500 to-violet-500 text-white">
             <Sparkles size={14} />
           </span>
@@ -13,19 +13,19 @@ export default function Footer() {
         </div>
 
         <nav className="flex flex-wrap justify-center gap-6">
-          <a href="#features" className="hover:text-slate-900">
+          <a href="#features" className="transition hover:text-fg">
             Features
           </a>
-          <a href="#how-it-works" className="hover:text-slate-900">
+          <a href="#how-it-works" className="transition hover:text-fg">
             How it works
           </a>
-          <a href="#faq" className="hover:text-slate-900">
+          <a href="#faq" className="transition hover:text-fg">
             FAQ
           </a>
-          <Link to="/login" className="hover:text-slate-900">
+          <Link to="/login" className="transition hover:text-fg">
             Log in
           </Link>
-          <Link to="/register" className="hover:text-slate-900">
+          <Link to="/register" className="transition hover:text-fg">
             Register
           </Link>
         </nav>

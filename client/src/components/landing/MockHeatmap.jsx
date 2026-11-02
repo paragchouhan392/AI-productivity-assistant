@@ -1,9 +1,9 @@
 const levelClass = [
-  "bg-slate-100",
-  "bg-brand-100",
-  "bg-brand-400",
+  "bg-white/5",
+  "bg-brand-500/25",
+  "bg-brand-500/50",
   "bg-brand-500",
-  "bg-brand-700",
+  "bg-brand-300",
 ];
 
 export default function MockHeatmap({ weeks = 20, cell = "size-3" }) {

@@ -15,20 +15,20 @@ function ShowcaseRow({ index, eyebrow, title, text, points, children }) {
   return (
     <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
       <Reveal className={reversed ? "lg:order-2" : ""}>
-        <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">
           {eyebrow}
         </p>
         <h3 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
           {title}
         </h3>
-        <p className="mt-4 text-slate-600">{text}</p>
+        <p className="mt-4 text-fg-muted">{text}</p>
         <ul className="mt-6 space-y-3">
           {points.map((point) => (
             <li
               key={point}
-              className="flex items-start gap-3 text-sm text-slate-700"
+              className="flex items-start gap-3 text-sm text-fg-muted"
             >
-              <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-600">
+              <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-brand-500/15 text-brand-300">
                 <Check size={12} strokeWidth={3} />
               </span>
               {point}
@@ -44,7 +44,10 @@ function ShowcaseRow({ index, eyebrow, title, text, points, children }) {
 
 export default function Showcases() {
   return (
-    <section id="showcase" className="scroll-mt-20 bg-white py-24">
+    <section
+      id="showcase"
+      className="scroll-mt-20 border-y border-white/5 bg-surface/50 py-24"
+    >
       <div className="mx-auto max-w-6xl px-4">
         <SectionHeading
           eyebrow="A closer look"

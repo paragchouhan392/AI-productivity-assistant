@@ -35,7 +35,10 @@ export default function Faq() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section id="faq" className="scroll-mt-20 bg-white py-24">
+    <section
+      id="faq"
+      className="scroll-mt-20 border-y border-white/5 bg-surface/50 py-24"
+    >
       <div className="mx-auto max-w-3xl px-4">
         <SectionHeading eyebrow="FAQ" title="Questions, answered" />
 
@@ -45,7 +48,7 @@ export default function Faq() {
             return (
               <div
                 key={item.q}
-                className="rounded-xl border border-slate-200 bg-white"
+                className="rounded-xl border border-white/10 bg-surface transition-colors hover:border-brand-500/30"
               >
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
@@ -55,7 +58,7 @@ export default function Faq() {
                   {item.q}
                   <ChevronDown
                     size={18}
-                    className={`shrink-0 text-slate-400 transition-transform ${
+                    className={`shrink-0 text-fg-subtle transition-transform ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -70,7 +73,7 @@ export default function Faq() {
                       transition={{ duration: 0.25 }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 pb-4 text-sm leading-relaxed text-slate-600">
+                      <p className="px-5 pb-4 text-sm leading-relaxed text-fg-muted">
                         {item.a}
                       </p>
                     </motion.div>
