@@ -1,8 +1,9 @@
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route } from "react-router";
 
 import { ProtectedRoute, GuestRoute } from "@/components/RouteGuard";
 import AppLayout from "@/components/layout/AppLayout";
 
+import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
@@ -16,13 +17,13 @@ export default function App() {
   return (
     <Routes>
       <Route element={<GuestRoute />}>
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="planner" element={<Planner />} />
           <Route path="tasks" element={<Tasks />} />
