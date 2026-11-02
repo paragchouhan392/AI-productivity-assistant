@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router";
 
-import { ProtectedRoute, GuestRoute } from "@/components/RouteGuards";
+import { ProtectedRoute, GuestRoute } from "@/components/RouteGuard";
 import AppLayout from "@/components/layout/AppLayout";
 
 import Login from "@/pages/Login";
