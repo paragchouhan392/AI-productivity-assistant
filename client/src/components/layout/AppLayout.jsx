@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   ListTodo,
@@ -26,6 +26,13 @@ const linkClass = ({ isActive }) =>
 
 export default function AppLayout() {
   const { user, logout } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/", { replace: true });
+  };
 
   return (
     <div className="min-h-screen md:flex">
