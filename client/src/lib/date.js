@@ -24,3 +24,22 @@ export const dayLabel = (dateStr, today) => {
     month: "short",
   });
 };
+
+// Whole days from one "YYYY-MM-DD" date to another (negative if `to` is earlier)
+export const daysBetween = (fromStr, toStr) => {
+  const toUtc = (s) => {
+    const [y, m, d] = s.split("-").map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  return Math.round((toUtc(toStr) - toUtc(fromStr)) / 86400000);
+};
+
+// "12 Dec", or "12 Dec 2027" when it's not the current year
+export const formatShortDate = (dateStr, today) => {
+  const sameYear = !today || dateStr.slice(0, 4) === today.slice(0, 4);
+  return toLocalDate(dateStr).toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+    ...(sameYear ? {} : { year: "numeric" }),
+  });
+};

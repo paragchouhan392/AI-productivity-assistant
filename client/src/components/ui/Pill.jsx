@@ -4,6 +4,7 @@ const tones = {
   slate: "bg-white/10 text-fg-muted",
   violet: "bg-violet-500/15 text-violet-300",
   amber: "bg-amber-500/15 text-amber-300",
+  red: "bg-red-500/15 text-red-300",
 };
 
 export default function Pill({ tone = "slate", className = "", children }) {
